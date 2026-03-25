@@ -37,6 +37,13 @@
         <scope>test</scope>
     </dependency>
 
+    <!-- Raven Shared Logic -->
+    <dependency>
+        <groupId>us.deans.raven</groupId>
+        <artifactId>Raven-Processor</artifactId>
+        <version>1.0</version>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -50,6 +57,26 @@
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.2.5</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.5.2</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals><goal>shade</goal></goals>
+            <configuration>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>us.deans.raven.App</mainClass>
+                </transformer>
+              </transformers>
+              <createDependencyReducedPom>false</createDependencyReducedPom>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
 
     </plugins>
