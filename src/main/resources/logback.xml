@@ -1,11 +1,54 @@
 <configuration>
-  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-    <encoder>
-      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+  <property name="APP_NAME" value="raven-jobs"/>
+  <property name="RAVEN_OPERATION" value="${raven.operation:-unknown}"/>
+  <property name="RAVEN_ENV" value="${raven.env:-dev}"/>
+  <property name="RAVEN_RUN_ID" value="${raven.run.id:-na}"/>
+  <property name="LOG_DIR" value="${raven.log.dir:-./logs}"/>
+  <property name="LOG_FILE_BASENAME" value="${raven.log.file.basename:-raven-jobs}"/>
+  <property name="LOG_LEVEL" value="${raven.log.level:-INFO}"/>
+  <property name="LOG_MAX_FILE_SIZE" value="${raven.log.maxFileSize:-25MB}"/>
+  <property name="LOG_MAX_HISTORY_DAYS" value="${raven.log.maxHistoryDays:-30}"/>
+  <property name="LOG_TOTAL_SIZE_CAP" value="${raven.log.totalSizeCap:-1GB}"/>
+
+  <appender name="CONSOLE_JSON" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+      <timeZone>UTC</timeZone>
+      <customFields>{"app":"${APP_NAME}","operation":"${RAVEN_OPERATION}","environment":"${RAVEN_ENV}","run_id":"${RAVEN_RUN_ID}"}</customFields>
+      <fieldNames>
+        <timestamp>@timestamp</timestamp>
+        <message>message</message>
+        <logger>logger</logger>
+        <thread>thread</thread>
+        <levelValue>level_value</levelValue>
+        <stackTrace>exception</stackTrace>
+      </fieldNames>
     </encoder>
   </appender>
 
-  <root level="INFO">
-    <appender-ref ref="STDOUT" />
+  <appender name="FILE_JSON" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_DIR}/${LOG_FILE_BASENAME}.ndjson</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <fileNamePattern>${LOG_DIR}/${LOG_FILE_BASENAME}.%d{yyyy-MM-dd}.%i.ndjson.gz</fileNamePattern>
+      <maxFileSize>${LOG_MAX_FILE_SIZE}</maxFileSize>
+      <maxHistory>${LOG_MAX_HISTORY_DAYS}</maxHistory>
+      <totalSizeCap>${LOG_TOTAL_SIZE_CAP}</totalSizeCap>
+    </rollingPolicy>
+    <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+      <timeZone>UTC</timeZone>
+      <customFields>{"app":"${APP_NAME}","operation":"${RAVEN_OPERATION}","environment":"${RAVEN_ENV}","run_id":"${RAVEN_RUN_ID}"}</customFields>
+      <fieldNames>
+        <timestamp>@timestamp</timestamp>
+        <message>message</message>
+        <logger>logger</logger>
+        <thread>thread</thread>
+        <levelValue>level_value</levelValue>
+        <stackTrace>exception</stackTrace>
+      </fieldNames>
+    </encoder>
+  </appender>
+
+  <root level="${LOG_LEVEL}">
+    <appender-ref ref="CONSOLE_JSON" />
+    <appender-ref ref="FILE_JSON" />
   </root>
 </configuration>

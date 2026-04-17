@@ -2,9 +2,11 @@ package us.deans.raven;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import us.deans.raven.jobs.OperationM3;
 import us.deans.raven.jobs.PruneJob;
 import us.deans.raven.processor.M2Result;
 import us.deans.raven.processor.M2Service;
+import us.deans.raven.processor.M3Result;
 import us.deans.raven.processor.Maria_DAO;
 import us.deans.raven.processor.MongoDao;
 
@@ -50,8 +52,12 @@ public class App {
                     }
                 }
             }
+            case "M3" -> {
+                M3Result result = new OperationM3().run();
+                if (!result.isMatch()) System.exit(1);
+            }
             default -> {
-                log.error("Unknown operation: {}. Valid options: M1, M2, R7", op);
+                log.error("Unknown operation: {}. Valid options: M1, M2, M3, R7", op);
                 System.exit(1);
             }
         }
