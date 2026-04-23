@@ -7,13 +7,13 @@ import us.deans.raven.processor.MongoDao;
 
 import java.util.List;
 
-public class PruneJob {
+public class OperationM1 {
 
-    private final Logger log = LoggerFactory.getLogger(PruneJob.class);
+    private final Logger log = LoggerFactory.getLogger(OperationM1.class);
     private final Maria_DAO mariaDao;
     private final MongoDao mongoDao;
 
-    public PruneJob() {
+    public OperationM1() {
         this.mariaDao = new Maria_DAO();
         this.mongoDao = new MongoDao();
     }
