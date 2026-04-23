@@ -3,7 +3,7 @@ package us.deans.raven;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import us.deans.raven.jobs.OperationM3;
-import us.deans.raven.jobs.PruneJob;
+import us.deans.raven.jobs.OperationM1;
 import us.deans.raven.processor.M2Result;
 import us.deans.raven.processor.M2Service;
 import us.deans.raven.processor.M3Result;
@@ -32,7 +32,7 @@ public class App {
                 String uploadId = args[1];
                 new R7TestRunner(uploadId).run();
             }
-            case "M1" -> new PruneJob().run();
+            case "M1" -> new OperationM1().run();
             case "M2" -> {
                 if (args.length < 2) {
                     log.error("M2 requires at least one upload_id. Usage: App M2 <upload_id> [upload_id ...]");
