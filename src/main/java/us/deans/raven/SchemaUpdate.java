@@ -19,6 +19,9 @@ public class SchemaUpdate {
             System.out.println("Adding 'pruned_at' column...");
             stmt.execute("ALTER TABLE uploads ADD COLUMN IF NOT EXISTS pruned_at DATETIME NULL");
 
+            System.out.println("Adding 'op_author' column...");
+            stmt.execute("ALTER TABLE uploads ADD COLUMN IF NOT EXISTS op_author VARCHAR(100) NULL");
+
             System.out.println("Schema update completed successfully.");
 
         } catch (Exception e) {
