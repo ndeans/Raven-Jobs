@@ -2,6 +2,7 @@ package us.deans.raven;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import us.deans.raven.jobs.BackfillOpAuthor;
 import us.deans.raven.jobs.OperationM3;
 import us.deans.raven.jobs.OperationM1;
 import us.deans.raven.processor.M2Result;
@@ -56,8 +57,9 @@ public class App {
                 M3Result result = new OperationM3().run();
                 if (!result.isMatch()) System.exit(1);
             }
+            case "BACKFILL" -> new BackfillOpAuthor().run();
             default -> {
-                log.error("Unknown operation: {}. Valid options: M1, M2, M3, R7", op);
+                log.error("Unknown operation: {}. Valid options: M1, M2, M3, R7, BACKFILL", op);
                 System.exit(1);
             }
         }
